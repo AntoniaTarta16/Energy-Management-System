@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="client.component.scss">
+</head>
+<body class="background">
+<div class="full-page-background">
+  <div class="table-responsive">
+    <div class="table-wrapper">
+      <div class="table-title">
+        <div class="row">
+          <div class="col-xs-5">
+            <h2>My <b>Devices</b></h2>
+          </div>
+          <div class="col-xs-7 text-right">
+            <button (click)="logOut()" class="btn btn-danger">
+              <i class="fa fa-right-from-bracket"></i> Log Out
+            </button>
+            <a routerLink="/dashboard/chat" class="btn btn-primary">
+              <i class="fa-solid fa-comments"></i><span>Chat</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+          <th>Id</th>
+          <th>Description</th>
+          <th>Address</th>
+          <th>Max Hourly Energy Consumption</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let device of devices; let i = index">
+          <td><b>{{ device.idDevice }}</b></td>
+          <td>{{ device.description }}</td>
+          <td>{{ device.address }}</td>
+          <td>{{ device.maxHourlyEnergyConsumption }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="notifications">
+    <ul>
+      <li *ngFor="let notification of notifications">{{ notification }}</li>
+    </ul>
+  </div>
+  <div class="form-wrapper">
+    <div class="form-group">
+      <label for="deviceSelect" class="form-label">Alege dispozitivul:</label>
+      <select id="deviceSelect" class="form-control" [(ngModel)]="selectedDeviceId">
+        <option *ngFor="let device of devices" [value]="device.idDevice">
+          {{ device.description }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="dateInput" class="form-label">Alege data:</label>
+      <input id="dateInput" type="date" class="form-control" [(ngModel)]="selectedDate">
+    </div>
+
+    <div class="form-group">
+      <button class="btn btn-primary" (click)="updateChart()">Generează graficul</button>
+    </div>
+  </div>
+  <div style="width: 600px; height: 450px;">
+    <canvas #chart></canvas>
+  </div>
+</div>
+</body>
+</html>

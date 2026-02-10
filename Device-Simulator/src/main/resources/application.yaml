@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: Device-Simulator
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+file:
+  path: "D:\\An 4\\SD\\ds2024_30643_tarta_antonia_assignment_2\\sensor.csv"
+device:
+  id: ff34f467-1a7b-4cc3-87b3-05e306b6e2aa
+queue:
+  name: data_queue
+server:
+  port: 8082

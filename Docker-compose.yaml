@@ -1,0 +1,177 @@
+
+services:
+  traefik:
+    image: traefik:v2.8
+    command:
+      - --api.insecure=true
+      - --providers.docker=true
+      - --entrypoints.web.address=:80
+    ports:
+      - "80:80"        
+      - "8080:8080"   
+    networks:
+      - mynetwork
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock" 
+    depends_on:
+      - users
+      - devices
+      - monitoring
+
+
+  devices:
+    image: device-management
+    build:
+      context: ./Device-Management
+    environment:
+      - SPRING_APPLICATION_NAME=Device-Management
+      - SPRING_DATASOURCE_URL=jdbc:mysql://device:3306/device
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_HIBERNATE_DIALECT=org.hibernate.dialect.MySQLDialect
+      - SPRING_JPA_OPEN_IN_VIEW=false
+      - SPRING_JPA_SHOW_SQL=true
+    depends_on:
+      - device
+    networks:
+      - mynetwork
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.devices.rule=Host(`devices.localhost`)"
+      - "traefik.http.services.devices.loadbalancer.server.port=8539"
+    deploy:
+      replicas: 2
+
+
+  users:
+    image: user-management
+    environment:
+      - SPRING_APPLICATION_NAME=User-Management
+      - SPRING_DATASOURCE_URL=jdbc:mysql://user:3306/user
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_HIBERNATE_DIALECT=org.hibernate.dialect.MySQLDialect
+      - SPRING_JPA_OPEN_IN_VIEW=false
+      - SPRING_JPA_SHOW_SQL=true
+    depends_on:
+      - user
+    networks:
+      - mynetwork
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.users.rule=Host(`users.localhost`)"
+      - "traefik.http.services.users.loadbalancer.server.port=8537"
+    deploy:
+      replicas: 2
+
+  monitoring:
+    build:
+      context: ./Monitoring-Communication
+    image: monitoring
+    container_name: monitoring
+    environment:
+      - SPRING_APPLICATION_NAME=Monitoring-Communication
+      - SPRING_DATASOURCE_URL=jdbc:mysql://monitoring_db:3306/monitoring
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_HIBERNATE_DIALECT=org.hibernate.dialect.MySQLDialect
+      - SPRING_JPA_OPEN_IN_VIEW=false
+      - SPRING_JPA_SHOW_SQL=true
+    depends_on:
+      - monitoring_db
+    networks:
+      - mynetwork
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.monitoring.rule=Host(`monitoring.localhost`)"
+      - "traefik.http.services.monitoring.loadbalancer.server.port=8543"
+
+  chat:
+    build:
+      context: ./Chat
+    image: chat
+    container_name: chat
+    networks:
+      - mynetwork
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.chat.rule=Host(`chat.localhost`)"
+      - "traefik.http.services.chat.loadbalancer.server.port=8547"
+
+  angular:
+    image: frontend
+    container_name: frontend-container
+    build:
+      context: ./Frontend 
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+    networks:
+      - mynetwork
+    restart: always  
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.angular.rule=Host(`angular.localhost`)"
+      - "traefik.http.services.angular.loadbalancer.server.port=80"
+      - "traefik.http.routers.angular.entrypoints=web"
+
+  user:
+    image: mysql:8.0.39  
+    container_name: user-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: user
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - '3308:3306' 
+    networks:
+      - mynetwork
+
+  device:
+    image: mysql:8.0.39  
+    container_name: device-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: device
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - '3307:3306'  
+    networks:
+      - mynetwork
+
+  monitoring_db:
+    image: mysql:8.0.39  
+    container_name: monitoring-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: monitoring
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - '3309:3306' 
+    networks:
+      - mynetwork
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
+
+volumes:
+  traefik_logs:

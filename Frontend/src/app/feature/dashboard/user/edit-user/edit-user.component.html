@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="edit-user.component.scss">
+</head>
+<body class="background">
+<div class="full-page-background">
+  <div class="form-container">
+    <div class="form-title">
+      <div class="row">
+        <div class="col-xs-12">
+          <h2>Edit <b>User</b></h2>
+        </div>
+      </div>
+    </div>
+    <form [formGroup]="saveForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input id="name" formControlName="name" class="form-control" placeholder="Enter user name" required>
+      </div>
+      <div class="form-group">
+        <label for="role">Role</label>
+        <select id="role" formControlName="role" class="form-control" required>
+          <option value="ADMIN">ADMIN</option>
+          <option value="CLIENT">CLIENT</option>
+        </select>
+      </div>
+      <div *ngIf="errorMessage" class="text-danger">
+        {{ errorMessage }}
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn-space">Save</button>
+        <a routerLink="/dashboard/administrator" class="btn btn-primary btn-space">
+          <span>Back</span>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

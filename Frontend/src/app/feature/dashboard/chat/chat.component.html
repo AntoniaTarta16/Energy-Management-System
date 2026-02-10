@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="chat.component.scss">
+</head>
+<body>
+<div class="chat-container">
+  <!-- Selectorul de utilizatori -->
+  <div class="user-selector">
+    <label for="userSelect">Users:</label>
+    <select id="userSelect" [(ngModel)]="receiverId" (change)="selectReceiver(receiverId)">
+      <option value="all">All</option>
+      <option *ngFor="let user of users" [value]="user.idUser">
+        {{ user.name }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Lista de mesaje -->
+  <div class="messages">
+    <div *ngFor="let msg of messages" [ngClass]="{'sent': msg.senderId === loggedInUserId, 'received': msg.senderId !== loggedInUserId}">
+      <div class="message-content">
+        <span class="sender">{{ msg.senderId === loggedInUserId ? 'You' : senderName }}:</span>
+        <p class="message-text">{{ msg.message }}</p>
+        <span *ngIf="msg.read" class="read-indicator">
+          <i class="fa fa-check"></i> Seen
+        </span>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="typingNotification" class="typing-notification">
+    {{ typingNotification }}
+  </div>
+  <div class="message-input-container"  *ngIf="!(receiverId === 'all' && !isAdmin())">
+  <textarea [(ngModel)]="message"
+            placeholder="Write a message..."
+            class="message-input"
+            (focus)="onMessageBoxForSeen()"
+            (input)="onMessageBoxForTyping()"
+            (keydown.enter)="sendMessage(); onMessageBoxForSeen(); $event.preventDefault()">
+  </textarea>
+  </div>
+</div>
+</body>
+</html>

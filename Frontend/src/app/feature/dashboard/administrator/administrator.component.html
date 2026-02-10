@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="administrator.component.scss">
+</head>
+<body class="background">
+<div class="full-page-background">
+  <div class="table-responsive">
+    <div class="table-wrapper">
+      <div class="table-title">
+        <div class="row">
+          <div class="col-xs-5">
+            <h2>User <b>Management</b></h2>
+          </div>
+          <div class="col-xs-7 text-right">
+            <button (click)="logOut()" class="btn btn-danger">
+              <i class="fa fa-right-from-bracket"></i> Log Out
+            </button>
+            <a routerLink="/dashboard/person" class="btn btn-primary">
+              <i class="material-icons">&#xE147;</i> <span>Add New User</span>
+            </a>
+            <a routerLink="/dashboard/device" class="btn btn-primary">
+              <i class="fa-solid fa-microchip"></i><span>Devices</span>
+            </a>
+            <a routerLink="/dashboard/chat" class="btn btn-primary">
+              <i class="fa-solid fa-comments"></i><span>Chat</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let user of users; let i = index">
+          <td><b>{{ user.idUser }}</b></td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.role }}</td>
+          <td>
+            <div class="action-buttons">
+              <button (click)="deleteUser(user.name)" class="btn btn-danger">
+                <i class="fa-solid fa-trash-can"></i> Delete
+              </button>
+              <a [routerLink]="['/dashboard/edit-user', user.name]"  class="btn btn-edit">
+                <i class="material-icons">&#xE254;</i> <span>Edit</span>
+              </a>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: Device-Management
+  datasource:
+    url: jdbc:mysql://localhost:3306/device
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+server:
+  port: 8539
+  servlet:
+    context-path: '/api'
+  error:
+    whitelabel:
+      enabled: false
+security:
+  secret-key: AM-ME-2024-32309-1q2w3e4r5t6y7u8i9o0p
+  token-expiration-days: 15
+exchange:
+  name: device_changes
+queue:
+  name: device_queue

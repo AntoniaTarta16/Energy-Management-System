@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="edit-device.component.scss">
+</head>
+<body class="background">
+<div class="full-page-background">
+  <div class="form-container">
+    <div class="form-title">
+      <div class="row">
+        <div class="col-xs-12">
+          <h2>Edit <b>Device</b></h2>
+        </div>
+      </div>
+    </div>
+    <form [formGroup]="saveForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input id="description" formControlName="description" class="form-control" placeholder="Enter description" required>
+      </div>
+      <div class="form-group">
+        <label for="address">Address</label>
+        <input id="address" formControlName="address" class="form-control" placeholder="Enter address" required>
+      </div>
+      <div class="form-group">
+        <label for="maxHourlyEnergyConsumption">Max Hourly Energy Consumption</label>
+        <input id="maxHourlyEnergyConsumption" formControlName="maxHourlyEnergyConsumption" class="form-control" placeholder="Enter max hourly energy consumption" required>
+      </div>
+      <div class="form-group">
+        <label for="idUser">Client</label>
+        <select id="idUser" formControlName="idUser" class="form-control" required>
+          <option value="null">None</option>
+          <option *ngFor="let idUser of idUsers" [value]="idUser">{{ idUser }}</option>
+        </select>
+      </div>
+      <div *ngIf="errorMessage" class="text-danger">
+        {{ errorMessage }}
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn-space">Save</button>
+        <a routerLink="/dashboard/device" class="btn btn-primary btn-space">
+          <span>Back</span>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>

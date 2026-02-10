@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="device.component.scss">
+</head>
+<body class="background">
+<div class="full-page-background">
+  <div class="table-responsive">
+    <div class="table-wrapper">
+      <div class="table-title">
+        <div class="row">
+          <div class="col-xs-5">
+            <h2>Device <b>Management</b></h2>
+          </div>
+          <div class="col-xs-7 text-right">
+            <button (click)="logOut()" class="btn btn-danger">
+              <i class="fa fa-right-from-bracket"></i> Log Out
+            </button>
+            <a routerLink="/dashboard/device-save" class="btn btn-primary">
+              <i class="material-icons">&#xE147;</i> <span>Device</span>
+            </a>
+            <a routerLink="/dashboard/administrator" class="btn btn-primary">
+              <i class="fa-solid fa-user"></i> <span>Users</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+          <th>#</th>
+          <th>Description</th>
+          <th>Address</th>
+          <th>Max Hourly Energy Consumption</th>
+          <th>Client</th>
+          <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let device of devices; let i = index">
+          <td><b>{{ i + 1 }}</b></td>
+          <td>{{ device.description }}</td>
+          <td>{{ device.address }}</td>
+          <td>{{ device.maxHourlyEnergyConsumption }}</td>
+          <td>{{ device.idUser }}</td>
+          <td>
+            <div class="action-buttons">
+              <button (click)="deleteDevice(device.idDevice)" class="btn btn-danger">
+                <i class="fa-solid fa-trash-can"></i> Delete
+              </button>
+              <a [routerLink]="['/dashboard/edit-device', device.idDevice]"  class="btn btn-edit">
+                <i class="material-icons">&#xE254;</i> <span>Edit</span>
+              </a>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>

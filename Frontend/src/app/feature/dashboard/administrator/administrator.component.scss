@@ -1,0 +1,10 @@
+@import "../../../shared/style/style.scss";
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.action-buttons .btn {
+  display: inline-block;
+}
+
